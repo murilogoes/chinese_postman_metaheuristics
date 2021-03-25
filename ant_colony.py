@@ -7,6 +7,17 @@ import time
 
 # instalar https://pypi.org/project/ACO-Pants/
 
+# Valores padrão utilizados na configuracao do algoritmo
+# relative importance placed on pheromones; default=1
+# relative importance placed on distances; default=3
+# number of iterations to perform; default=100
+# ratio of evaporated pheromone (0 <= P <= 1); default=0.8
+# ratio of elite ant's pheromone; default=0.5
+# total pheromone capacity of each ant (Q > 0); default=1
+# initial amount of pheromone on every edge (T > 0); default=0.01
+# number of ants used in each iteration (N > 0); default=10
+# specify a particular set of demo data; default=33
+
 tempos = list()
 arestas = list()
 
@@ -93,11 +104,6 @@ print(f'{solution.distance}')
 
 tempos.append(time.time() - inicio)
 arestas.append(len(edges2))
-
-
-
-
-
 
 plt.xlabel('Número de Arestas')
 plt.ylabel('Tempo')
