@@ -2,18 +2,14 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pants
 import data
+import time
+
 
 # instalar https://pypi.org/project/ACO-Pants/
 
-# criando um grafo direcionado
-G = nx.DiGraph()
+tempos = list()
+arestas = list()
 
-# pegando as arestas do dataset
-edges = data.nova_luz
-
-for start, end, length in edges:
-    # adicionando as arestas no grafo
-    G.add_edge(start, end, length=length)
 
 # metodo que calcula a distancia entre os elementos comparados
 def distancia(a, b):
@@ -23,6 +19,20 @@ def distancia(a, b):
     else:
         return nx.shortest_path_length(G, a[0], b[0], weight='length')
 
+
+inicio = time.time()
+
+
+# criando um grafo direcionado
+G = nx.DiGraph()
+
+# pegando as arestas do dataset
+edges = data.nova_luz2
+
+for start, end, length in edges:
+    # adicionando as arestas no grafo
+    G.add_edge(start, end, length=length)
+
 # pegando uma lista de arestas do grafo
 edges = list(G.edges)
 
@@ -30,7 +40,6 @@ edges = list(G.edges)
 world = pants.World(edges, distancia)
 solver = pants.Solver()
 solution = solver.solve(world)
-
 
 # ali na solucao ja temos a sequencia de arestas agora vamos ver exatamente os vertices que serao visitados
 caminho = list()
@@ -45,3 +54,55 @@ for edge in solution.path:
 
 print(f'Caminho: {" -> ".join(caminho)}')
 print(f'{solution.distance}')
+
+tempos.append(time.time() - inicio)
+arestas.append(len(edges))
+
+#SEGUNDO GRAFO
+# criando um grafo direcionado
+G2 = nx.DiGraph()
+
+# pegando as arestas do dataset
+edges2 = data.nova_luz
+
+for start, end, length in edges2:
+    # adicionando as arestas no grafo
+    G.add_edge(start, end, length=length)
+
+# pegando uma lista de arestas do grafo
+edges2 = list(G.edges)
+
+# criando o "mundo" onde serao adicionadas as formigas e solucionando o problema
+world = pants.World(edges2, distancia)
+solver = pants.Solver()
+solution = solver.solve(world)
+
+# ali na solucao ja temos a sequencia de arestas agora vamos ver exatamente os vertices que serao visitados
+caminho2 = list()
+for edge in solution.path:
+    short = nx.shortest_path(G, edge.start[0], edge.end[0], weight='length')
+    for i in short:
+        if len(caminho2) == 0:
+            caminho2.append(str(i))
+        else:
+            if caminho2[-1] != str(i):
+                caminho2.append(str(i))
+
+print(f'Caminho: {" -> ".join(caminho2)}')
+print(f'{solution.distance}')
+
+tempos.append(time.time() - inicio)
+arestas.append(len(edges2))
+
+
+
+
+
+
+plt.xlabel('Número de Arestas')
+plt.ylabel('Tempo')
+# plt.plot(elements, times, label='Força Bruta')
+plt.plot(arestas, tempos, label='Tempo em x número de Arestas - Colônia de Formigas')
+plt.grid()
+plt.legend()
+plt.show()
